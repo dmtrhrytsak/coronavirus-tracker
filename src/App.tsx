@@ -1,26 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useSearchParams } from 'react-router-dom';
 
-function App() {
+import { Statistics } from './components/Statistics';
+import { IVirusInfo } from './types/VirusInfo';
+
+import StyledApp from './App.styled';
+import Wrapper from './components/Utils/Wrapper.styled';
+
+const App = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const country = searchParams.get('country') || '';
+
+  const changeCountry = (newCountry: IVirusInfo['country']) => {
+    if (newCountry) {
+      setSearchParams({ country: newCountry });
+    } else {
+      setSearchParams({});
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <StyledApp>
+      <Wrapper>
+        <StyledApp.SearchBar changeCountry={changeCountry} />
+        {country && <Statistics country={country} />}
+      </Wrapper>
+    </StyledApp>
   );
-}
+};
 
 export default App;
